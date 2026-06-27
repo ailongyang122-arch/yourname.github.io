@@ -1,120 +1,156 @@
 ﻿*{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0a0a0a;--bg-alt:#0d0d0d;--bg-card:#111;
-  --gold:#D4AF37;--gold-light:#F5E6A3;--gold-dark:#B8960C;
-  --porcelain:#F0EDE6;--porcelain-dim:#C8C3BA;
-  --blue:#1A3A5C;--blue-light:#2E5C8A;--blue-glow:#4A90D9;
-  --text:#e8e4dc;--text-dim:#8a8578;
+  /* 青花瓷浅底色系 — 取自参考图 */
+  --porcelain-bg:#F5EDE4;          /* 瓷底米白 */
+  --porcelain-light:#FAF6F0;       /* 更浅的瓷白 */
+  --porcelain-warm:#EDE4D8;         /* 暖瓷色 */
+  --blue-ink:#1A3A5C;               /* 青花深蓝（墨） */
+  --blue-paint:#2B5478;             /* 青花中蓝 */
+  --blue-mist:#4A7BA7;              /* 青花浅蓝（雾） */
+  --blue-faint:#8BB0D0;            /* 极淡青花 */
+  --gold:#B8860B;                   /* 暗金（收敛，不再抢眼） */
+  --gold-accent:#DAA520;
+  --text-dark:#2C3E50;              /* 主文字深靛 */
+  --text-body:#3D5566;              /* 正文灰蓝 */
+  --text-muted:#7A9AAF;            /* 弱化文字 */
+  --card-bg:rgba(255,255,255,.50);
+  --card-border:rgba(26,58,92,.12);
 }
 html{overflow:hidden}
 body{
-  background:var(--bg);color:var(--text);
-  font-family:"STKaiti","KaiTi","楷体","Microsoft YaHei","PingFang SC",serif;
+  background:var(--porcelain-bg);
+  color:var(--text-dark);
+  font-family:"STXingkai","行楷","Xingkai SC","STKaiti","KaiTi","楷体","Microsoft YaHei","PingFang SC",serif;
   line-height:1.8;overflow-y:scroll;height:100vh;
   scroll-snap-type:y mandatory;
 }
 .container{max-width:1200px;margin:0 auto;padding:0 24px}
-section{min-height:100vh;display:flex;align-items:center;scroll-snap-align:start;padding:80px 0;position:relative}
-/* ===== 青花瓷纹理背景 ===== */
-body::before{
-  content:'';position:fixed;inset:0;z-index:-1;
+section{
+  min-height:100vh;display:flex;align-items:center;
+  scroll-snap-align:start;padding:80px 0;position:relative;
+}
+/* 每个section半透明迷雾 — z-index在Canvas之上 */
+section::before{
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
   background:
-    radial-gradient(ellipse at 20% 30%,rgba(26,58,92,.15) 0%,transparent 50%),
-    radial-gradient(ellipse at 80% 70%,rgba(26,58,92,.12) 0%,transparent 50%),
-    radial-gradient(ellipse at 50% 50%,rgba(212,175,55,.04) 0%,transparent 60%),
-    linear-gradient(180deg,var(--bg) 0%,#080808 100%);
+    linear-gradient(180deg,
+      rgba(245,237,228,.25) 0%,
+      rgba(245,237,228,.10) 40%,
+      transparent 70%
+    ),
+    linear-gradient(0deg,
+      rgba(245,237,228,.20) 0%,
+      transparent 30%
+    );
 }
-/* 青花瓷纹样装饰 */
+section .container{position:relative;z-index:3}
+
+/* ===== 青花瓷纹理背景 + 山水底图 ===== */
+body::before{
+  content:'';position:fixed;inset:0;z-index:-2;
+  background:
+    url('assets/bg-porcelain.jpg') center top / cover no-repeat,
+    /* 山水层叠渐变 */
+    radial-gradient(ellipse at 15% 20%,rgba(74,123,167,.08) 0%,transparent 50%),
+    radial-gradient(ellipse at 85% 75%,rgba(43,84,120,.06) 0%,transparent 50%),
+    radial-gradient(ellipse at 50% 90%,rgba(139,176,208,.05) 0%,transparent 40%),
+    linear-gradient(180deg,var(--porcelain-light) 0%,var(--porcelain-bg) 30%,var(--porcelain-warm) 100%);
+}
+/* 细腻的青花纹路 */
 body::after{
-  content:'';position:fixed;inset:0;z-index:-1;opacity:.04;
+  content:'';position:fixed;inset:0;z-index:-3;opacity:.03;
   background-image:
-    repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(74,144,217,.3) 40px,rgba(74,144,217,.3) 41px),
-    repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(74,144,217,.3) 40px,rgba(74,144,217,.3) 41px);
+    repeating-linear-gradient(0deg,transparent,transparent 50px,rgba(26,58,92,.25) 50px,rgba(26,58,92,.25) 51px),
+    repeating-linear-gradient(90deg,transparent,transparent 50px,rgba(26,58,92,.25) 50px,rgba(26,58,92,.25) 51px);
 }
+/* 层级：纹路 -3 | 山水底图 -2 | 迷雾 2 | 内容 3 */
+
 .section-label{
-  font-family:"STKaiti","KaiTi","楷体",serif;
+  font-family:"STXingkai","行楷","Xingkai SC","STKaiti","KaiTi","楷体",serif;
   font-size:.85rem;letter-spacing:6px;
-  color:var(--gold);
+  color:var(--blue-paint);
   text-align:center;text-transform:none;
   margin-bottom:12px;
-  text-shadow:0 0 12px rgba(212,175,55,.4);
 }
 h2{
   font-size:2.4rem;text-align:center;margin-bottom:12px;
   font-weight:700;letter-spacing:4px;
-  color:var(--porcelain);
+  color:var(--blue-ink);
 }
-h2 em{font-style:normal;color:var(--gold-light);text-shadow:0 0 20px rgba(212,175,55,.5)}
+h2 em{font-style:normal;color:var(--blue-mist)}
 .section-sub{
-  text-align:center;color:var(--text-dim);font-size:.92rem;
+  text-align:center;color:var(--text-muted);font-size:.92rem;
   margin-bottom:60px;letter-spacing:1px;
 }
-/* ===== Header ===== */
+
+/* ===== Header —— 瓷白毛玻璃 ===== */
 header{
   position:fixed;top:0;left:0;right:0;z-index:100;
   padding:14px 0;
-  background:rgba(10,10,10,.88);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(212,175,55,.12);
+  background:rgba(250,246,240,.85);
+  backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid rgba(26,58,92,.08);
 }
 header .container{display:flex;align-items:center;justify-content:space-between}
 .logo{
-  font-family:"STKaiti","KaiTi","楷体",serif;
+  font-family:"STXingkai","行楷","Xingkai SC","STKaiti","KaiTi","楷体",serif;
   font-size:1.3rem;font-weight:700;
-  color:var(--gold);
-  text-shadow:0 0 20px rgba(212,175,55,.4);
+  color:var(--blue-ink);
   letter-spacing:4px;
   text-decoration:none;
 }
-.logo .accent{color:var(--porcelain);font-size:.8em}
+.logo .accent{color:var(--gold);font-size:.8em}
 nav{display:flex;gap:32px}
 nav a{
-  color:var(--text-dim);text-decoration:none;
+  color:var(--text-muted);text-decoration:none;
   font-size:.85rem;letter-spacing:2px;
-  transition:color .3s,text-shadow .3s;
+  transition:color .3s;
 }
 nav a:hover,nav a.active{
-  color:var(--gold-light);
-  text-shadow:0 0 12px rgba(212,175,55,.6);
+  color:var(--blue-paint);
 }
-/* ===== Hero ===== */
+
+/* ===== Hero —— 与全站统一背景 ===== */
 .hero{
   min-height:100vh;
   display:flex;align-items:center;justify-content:center;
   position:relative;overflow:hidden;
   padding:120px 0 80px;
 }
-/* 青花瓷云纹背景 */
+/* Hero 的迷雾比其他section更淡 */
 .hero::before{
-  content:'';position:absolute;inset:0;
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
   background:
-    radial-gradient(ellipse at 30% 20%,rgba(26,58,92,.18) 0%,transparent 50%),
-    radial-gradient(ellipse at 70% 80%,rgba(26,58,92,.15) 0%,transparent 50%),
-    radial-gradient(ellipse at 50% 50%,rgba(212,175,55,.06) 0%,transparent 60%);
-  pointer-events:none;
+    linear-gradient(180deg,
+      rgba(245,237,228,.18) 0%,
+      rgba(245,237,228,.08) 40%,
+      transparent 70%
+    ),
+    linear-gradient(0deg,
+      rgba(245,237,228,.25) 0%,
+      transparent 30%
+    );
 }
-/* 青花瓷图案装饰圈 */
+/* 装饰圈改为青花淡纹 */
 .hero-orb{
   position:absolute;width:500px;height:500px;border-radius:50%;
-  border:1px solid rgba(74,144,217,.08);
+  border:1px solid rgba(26,58,92,.06);
   top:50%;left:50%;transform:translate(-50%,-50%);
   pointer-events:none;
 }
 .hero-orb::before,.hero-orb::after{
   content:'';position:absolute;border-radius:50%;
-  border:1px solid rgba(74,144,217,.06);
+  border:1px solid rgba(26,58,92,.04);
 }
 .hero-orb::before{inset:40px}
 .hero-orb::after{inset:80px}
-.hero-content{text-align:center;position:relative;z-index:1}
+
+.hero-content{text-align:center;position:relative;z-index:3}
 .hero-title{
-  font-family:"STKaiti","KaiTi","楷体",serif;
+  font-family:"STXingkai","行楷","Xingkai SC","STKaiti","KaiTi","楷体",serif;
   font-size:clamp(2.8rem,6vw,5rem);
   font-weight:700;letter-spacing:8px;
-  color:var(--porcelain);
-  text-shadow:
-    0 0 40px rgba(212,175,55,.3),
-    0 0 80px rgba(212,175,55,.15);
+  color:var(--blue-ink);
   position:relative;
   animation:titleFloat 4s ease-in-out infinite;
 }
@@ -124,26 +160,25 @@ nav a:hover,nav a.active{
 }
 .hero-title::after{
   content:'';display:block;width:120px;height:2px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  background:linear-gradient(90deg,transparent,var(--blue-paint),transparent);
   margin:16px auto 0;
 }
 .hero-subtitle{
-  color:var(--gold);
+  color:var(--blue-mist);
   font-size:1rem;letter-spacing:6px;
   margin-top:20px;
-  text-shadow:0 0 15px rgba(212,175,55,.4);
 }
 .typewriter-box{margin-top:28px;display:flex;justify-content:center;align-items:center;gap:6px}
 .tw-cursor{
-  font-family:"STKaiti","KaiTi","楷体",serif;font-size:1.05rem;
-  color:var(--porcelain-dim);
-  border-right:2px solid var(--gold);
+  font-family:"STXingkai","行楷","Xingkai SC","STKaiti","KaiTi","楷体",serif;font-size:1.05rem;
+  color:var(--text-muted);
+  border-right:2px solid var(--blue-paint);
   white-space:nowrap;overflow:hidden;
   animation:tw 3.5s steps(20) 1s forwards,cursorBlink .7s step-end infinite;
   max-width:0;
 }
 @keyframes tw{from{max-width:0}to{max-width:40ch}}
-@keyframes cursorBlink{0%,100%{border-color:transparent}50%{border-color:var(--gold)}}
+@keyframes cursorBlink{0%,100%{border-color:transparent}50%{border-color:var(--blue-paint)}}
 .hero-cta{margin-top:44px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
 .btn{
   padding:12px 36px;border-radius:2px;
@@ -151,140 +186,215 @@ nav a:hover,nav a.active{
   text-transform:none;
   text-decoration:none;
   transition:all .3s;cursor:pointer;display:inline-block;
-  font-family:"STKaiti","KaiTi","楷体",serif;
+  font-family:"STXingkai","行楷","Xingkai SC","STKaiti","KaiTi","楷体",serif;
 }
+/* 主按钮：青花蓝底 */
 .btn-primary{
-  background:linear-gradient(135deg,var(--gold-dark),var(--gold));
-  color:#0a0a0a;border:none;font-weight:700;
+  background:linear-gradient(135deg,var(--blue-ink),var(--blue-paint));
+  color:#fff;border:none;font-weight:700;
 }
 .btn-primary:hover{
-  box-shadow:0 0 30px rgba(212,175,55,.5);
+  box-shadow:0 0 30px rgba(26,58,92,.3);
   transform:translateY(-2px);
 }
+/* 次按钮：青花描边 */
 .btn-outline{
-  background:transparent;color:var(--gold);
-  border:1px solid var(--gold);
+  background:transparent;color:var(--blue-paint);
+  border:1px solid var(--blue-paint);
 }
 .btn-outline:hover{
-  background:rgba(212,175,55,.1);
-  box-shadow:0 0 20px rgba(212,175,55,.3);
+  background:rgba(26,58,92,.06);
+  box-shadow:0 0 20px rgba(26,58,92,.15);
   transform:translateY(-2px);
 }
+
 /* ===== About ===== */
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
 .about-avatar{
   width:240px;height:240px;border-radius:50%;
-  border:2px solid var(--gold);
+  border:2px solid var(--blue-faint);
   margin:0 auto;
-  box-shadow:0 0 40px rgba(212,175,55,.2),inset 0 0 40px rgba(26,58,92,.3);
-  background:linear-gradient(135deg,var(--blue),var(--bg-card));
+  box-shadow:
+    0 0 40px rgba(26,58,92,.1),
+    inset 0 0 30px rgba(74,123,167,.1);
+  background:linear-gradient(135deg,var(--blue-faint),var(--porcelain-light));
   display:flex;align-items:center;justify-content:center;
   font-size:4rem;position:relative;
 }
 .about-avatar::before{
   content:'';position:absolute;inset:-8px;border-radius:50%;
-  border:1px solid rgba(212,175,55,.2);
+  border:1px solid rgba(26,58,92,.12);
   animation:avatarSpin 20s linear infinite;
 }
 @keyframes avatarSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-.about-text h3{font-size:1.4rem;margin-bottom:16px;color:var(--gold-light);letter-spacing:2px}
-.about-text p{color:var(--text-dim);margin-bottom:12px}
+.about-text h3{font-size:1.4rem;margin-bottom:16px;color:var(--blue-ink);letter-spacing:2px}
+.about-text p{color:var(--text-body);margin-bottom:12px}
 .about-stats{display:flex;gap:32px;margin-top:24px}
 .stat{text-align:center}
-.stat-num{font-size:1.8rem;font-weight:700;color:var(--gold);font-family:"STKaiti","KaiTi","楷体",serif;text-shadow:0 0 15px rgba(212,175,55,.4)}
-.stat-label{font-size:.75rem;color:var(--text-dim);letter-spacing:2px;margin-top:4px}
+.stat-num{font-size:1.8rem;font-weight:700;color:var(--blue-paint);font-family:"STKaiti","KaiTi","楷体",serif}
+.stat-label{font-size:.75rem;color:var(--text-muted);letter-spacing:2px;margin-top:4px}
 .skills-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
 .skill-tag{
   padding:6px 14px;
-  border:1px solid rgba(212,175,55,.25);
-  font-size:.78rem;color:var(--gold);
+  border:1px solid var(--card-border);
+  background:rgba(26,58,92,.04);
+  font-size:.78rem;color:var(--blue-paint);
   letter-spacing:1px;
-  font-family:"STKaiti","KaiTi","楷体",serif;
+  font-family:"STXingkai","行楷","Xingkai SC","STKaiti","KaiTi","楷体",serif;
+  border-radius:2px;
 }
+
 /* ===== Projects ===== */
 .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px}
 .project-card{
-  background:linear-gradient(135deg,rgba(26,58,92,.15),var(--bg-card));
-  border:1px solid rgba(212,175,55,.1);
-  border-radius:4px;overflow:hidden;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:6px;overflow:hidden;
+  backdrop-filter:blur(6px);
+  box-shadow:0 4px 24px rgba(26,58,92,.06);
   transition:all .4s;
 }
 .project-card:hover{
-  border-color:var(--gold);
-  box-shadow:0 0 30px rgba(212,175,55,.15),0 8px 32px rgba(0,0,0,.4);
+  border-color:var(--blue-faint);
+  box-shadow:0 12px 40px rgba(26,58,92,.12),0 4px 16px rgba(0,0,0,.04);
   transform:translateY(-6px);
 }
 .project-thumb{
   height:200px;
-  background:linear-gradient(135deg,rgba(26,58,92,.2),rgba(10,10,10,.9));
+  background:linear-gradient(135deg,rgba(26,58,92,.12),rgba(74,123,167,.06));
   display:flex;align-items:center;justify-content:center;
   font-size:3.5rem;
-  border-bottom:1px solid rgba(212,175,55,.08);
+  border-bottom:1px solid var(--card-border);
+  position:relative;
+  overflow:hidden;
+}
+/* 视频缩略图 — 替换 emoji 时显示视频 */
+.project-thumb video{
+  width:100%;height:100%;object-fit:cover;
+  position:absolute;inset:0;
+}
+.project-thumb video::-webkit-media-controls{
+  display:none !important;  /* hover 时才显示控件 */
+}
+/* 图片查看 — 替换 emoji 时显示图片 */
+.project-thumb img.media-img{
+  width:100%;height:100%;object-fit:cover;
+  position:absolute;inset:0;
+  cursor:zoom-in;
+  transition:transform .3s;
+}
+.project-thumb:hover img.media-img{
+  transform:scale(1.03);
+}
+/* 媒体选择覆盖层 — 视频/图片双按钮 */
+.project-thumb .media-overlay{
+  position:absolute;inset:0;z-index:2;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  background:rgba(26,58,92,.18);
+  transition:opacity .3s,background .3s;
+  cursor:default;
+}
+.project-thumb .media-overlay:hover{
+  background:rgba(26,58,92,.25);
+}
+.project-thumb .media-overlay .media-btn{
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(4px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;
+  transition:transform .3s,background .3s,box-shadow .3s;
+  cursor:pointer;
+}
+.project-thumb .media-overlay .media-btn span{
+  font-size:1rem;color:var(--blue-ink);line-height:1;
+}
+.project-thumb .media-overlay .media-btn small{
+  font-size:.55rem;color:var(--text-muted);letter-spacing:1px;line-height:1;
+  font-family:"STXingkai","行楷","Xingkai SC","STKaiti","KaiTi","楷体",serif;
+}
+.project-thumb:hover .media-overlay .media-btn{
+  transform:scale(1.12);background:#fff;
+  box-shadow:0 4px 16px rgba(26,58,92,.15);
+}
+.project-thumb .media-overlay.hidden{opacity:0;pointer-events:none}
+/* 视频播放时显示控件 */
+.project-thumb.playing video::-webkit-media-controls{
+  display:inline !important;
 }
 .project-info{padding:20px}
-.project-info h4{font-size:1.05rem;margin-bottom:8px;color:var(--porcelain);letter-spacing:1px}
-.project-info p{font-size:.85rem;color:var(--text-dim);margin-bottom:12px}
+.project-info h4{font-size:1.05rem;margin-bottom:8px;color:var(--blue-ink);letter-spacing:1px}
+.project-info p{font-size:.85rem;color:var(--text-muted);margin-bottom:12px}
 .project-tags{display:flex;gap:8px;flex-wrap:wrap}
 .project-tag{
   padding:3px 10px;
-  background:rgba(212,175,55,.08);
-  font-size:.7rem;color:var(--gold);
+  background:rgba(26,58,92,.05);
+  font-size:.7rem;color:var(--blue-mist);
   letter-spacing:1px;
-  font-family:"STKaiti","KaiTi","楷体",serif;
+  font-family:"STXingkai","行楷","Xingkai SC","STKaiti","KaiTi","楷体",serif;
+  border-radius:2px;
 }
+
 /* ===== Services ===== */
 .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
 .service-card{
-  background:linear-gradient(135deg,rgba(26,58,92,.1),var(--bg-card));
-  border:1px solid rgba(212,175,55,.08);
-  border-radius:4px;padding:28px;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:6px;padding:28px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 2px 16px rgba(26,58,92,.04);
   transition:all .3s;
 }
 .service-card:hover{
-  border-color:var(--gold);
-  box-shadow:0 0 24px rgba(212,175,55,.12);
+  border-color:var(--blue-faint);
+  box-shadow:0 8px 32px rgba(26,58,92,.1);
   transform:translateY(-4px);
 }
 .service-icon{font-size:2rem;margin-bottom:12px}
-.service-card h4{font-size:1rem;margin-bottom:8px;color:var(--porcelain);letter-spacing:1px}
-.service-card h4 .gold{color:var(--gold-light)}
-.service-card p{font-size:.85rem;color:var(--text-dim)}
+.service-card h4{font-size:1rem;margin-bottom:8px;color:var(--blue-ink);letter-spacing:1px}
+.service-card h4 .gold{color:var(--blue-paint)}
+.service-card p{font-size:.85rem;color:var(--text-muted)}
+
 /* ===== CTA ===== */
 .cta-section{text-align:center}
-.cta-section p{color:var(--text-dim);max-width:600px;margin:0 auto 32px;font-size:.95rem}
+.cta-section p{color:var(--text-muted);max-width:600px;margin:0 auto 32px;font-size:.95rem}
+
 /* ===== Footer ===== */
 footer{
   padding:40px 0;text-align:center;
-  border-top:1px solid rgba(212,175,55,.1);
-  background:var(--bg-alt);
+  border-top:1px solid var(--card-border);
+  background:var(--porcelain-warm);
 }
-footer p{color:var(--text-dim);font-size:.8rem;margin-top:8px}
-/* ===== 飘落花瓣动画 ===== */
+footer p{color:var(--text-muted);font-size:.8rem;margin-top:8px}
+
+/* ===== 飘落花瓣 → 青花碎纹飘落 ===== */
 .petal{
   position:fixed;width:8px;height:8px;
-  background:radial-gradient(ellipse,var(--gold-light),transparent);
+  background:radial-gradient(ellipse,var(--blue-faint),transparent);
   border-radius:50% 0 50% 0;
   opacity:0;pointer-events:none;z-index:0;
   animation:petalFall linear infinite;
 }
 @keyframes petalFall{
   0%{opacity:0;transform:translateY(-20px) rotate(0deg)}
-  10%{opacity:.6}
-  90%{opacity:.3}
+  10%{opacity:.35}
+  90%{opacity:.15}
   100%{opacity:0;transform:translateY(100vh) rotate(720deg)}
 }
-/* ===== 水墨晕染装饰线 ===== */
+
+/* ===== 装饰线：青花蓝 ===== */
 .ink-line{
   width:60px;height:2px;margin:0 auto 40px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  background:linear-gradient(90deg,transparent,var(--blue-paint),transparent);
   position:relative;
 }
 .ink-line::before,.ink-line::after{
   content:'';position:absolute;top:-3px;height:8px;width:8px;
-  background:var(--gold);border-radius:50%;opacity:.6;
+  background:var(--blue-paint);border-radius:50%;opacity:.5;
 }
 .ink-line::before{left:-4px}
 .ink-line::after{right:-4px}
+
 @media(max-width:768px){
   .about-grid{grid-template-columns:1fr;text-align:center}
   .about-stats{justify-content:center}
